@@ -1,5 +1,6 @@
 from random import randint
 from os import system, name
+import FirstGame_HERO
 import time
 
 class Hero():
@@ -15,6 +16,19 @@ class Hero():
         self.life = self.life - lose
         print("Hero lose %s of life and now has %s life" %(lose,self.life))
 
+    def hero_add_itens(self, new_item):
+        self.itens.append(new_item)
+        print("Adding %s in your backpack." %(new_item)
+
+    def drink_potion(self):
+        print("You are drinking your potion")
+        self.life = self.life + 5
+        print("Now you have %s pts of life" %(self.life))
+
+    def turn_on_torch(self):
+        print("Now your torch is lighthing")
+        return 1
+
 def read_hero_life(hero):
     if hero.life == 0:
         print("++++++++++++++++++++")
@@ -25,6 +39,16 @@ def read_hero_life(hero):
 
 def Fight(type, hero):
     life = 0
+    damage = 0
+
+    if "knife" in hero.itens and "sword" not in hero.itens:
+        damage = 2
+        print("Your damage with Knife is ", damage)
+
+    if "sword" in hero.itens:
+        damage = 5
+        print("Your damage with Sword is ", damage)
+
 
     if type == "rat":
         life = 5
@@ -37,8 +61,8 @@ def Fight(type, hero):
             print("It's your turn")
             dice = Roll_a_Dice()
             if dice > 5:
-                print("You hit the rat. He lose 2 pts")
-                life = life - 2
+                print("You hit the rat. He lose %s pts", damage)
+                life = life - damage
             else:
                 print("Didn't work")
 
@@ -68,8 +92,8 @@ def Fight(type, hero):
             print("It's your turn")
             dice = Roll_a_Dice()
             if dice > 8:
-                print("You hit the Orc. He lose 2 pts")
-                life = life - 2
+                print("You hit the Orc. He lose %s pts", damage)
+                life = life - damage
             else:
                 print("Didn't work")
 
@@ -97,8 +121,8 @@ def Fight(type, hero):
             print("It's your turn")
             dice = Roll_a_Dice()
             if dice > 15:
-                print("You hit the Dragon. He lose 2 pts")
-                life = life - 2
+                print("You hit the Dragon. He lose %s pts", damage)
+                life = life - damage
             else:
                 print("Didn't work")
 
@@ -138,8 +162,7 @@ def first_room(hero):
         read_hero_life(hero)
         print("")
         print("<<---------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
+        hero.print_hero()
         print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Open the Metal door            |")
@@ -162,6 +185,7 @@ def first_room(hero):
             print(" --> Your dice was: ", dice)
             if dice >= 15:
                 print(" *** You find a Potion ***")
+                hero.hero_add_itens("potion")
             else:
                 print(" --- You didn't find anything keep looking ---")
         elif ans == 4:
@@ -171,6 +195,7 @@ def first_room(hero):
             print(" --> Your dice was: ", dice)
             if dice >= 18 :
                 print(" *** You find a key, looks like a Square *** ")
+                hero.hero_add_itens("key")
             else:
                 print(" --- You didn't find anything keep looking --- ")
 
@@ -188,13 +213,16 @@ def going_to_map2(hero):
         read_hero_life(hero)
         print("")
         print("<<---------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
+        hero.print_hero()
         print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Open the door                  |")
         print("| 2 - Look at the Garbage            |")
         print("| 3 - Look at the Little Candle      |")
+        if "potion" in hero.itens:
+            print("| 4 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 5 - Turn on the Torch      |")
         print("<<---------------------------------->>")
         ans = int(input())
 
@@ -207,6 +235,7 @@ def going_to_map2(hero):
         elif ans == 2:
             print("You are looking at the garbage when ... ")
             dice = Roll_a_Dice()
+            print("DICE WAS ", dice)
             if dice < 5:
                 print("You find a Big Rat coming at to you")
                 print("Let's Fight")
@@ -241,14 +270,17 @@ def going_to_map3(hero):
     while True:
         read_hero_life(hero)
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Open the door                                     |")
         print("| 2 - Look better for the top to try to find something  |")
         print("| 3 - Look at the table                                 |")
+        if "potion" in hero.itens:
+            print("| 4 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 5 - Turn on the Torch      |")
         print("<<----------------------------------------------------->>")
         ans = int(input())
 
@@ -293,6 +325,7 @@ def going_to_map3(hero):
             print("DICE WAS ", dice)
             if dice > 15:
                 print("You find a Sword")
+                hero.hero_add_itens("sword")
             else:
                 print("Didn't find anything")
 
@@ -307,13 +340,16 @@ def going_to_map4(hero):
     while True:
         read_hero_life(hero)
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Go to the Stairs                                  |")
         print("| 2 - Look better for little Statue  |")
+        if "potion" in hero.itens:
+            print("| 3 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 4 - Turn on the Torch      |")
         print("<<----------------------------------------------------->>")
         ans = int(input())
 
@@ -368,14 +404,17 @@ def going_to_map5(hero):
     while True:
         read_hero_life(hero)
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Go to the White Door                              |")
         print("| 2 - Go to the Dark Grey Door                          |")
         print("| 3 - Look at the wall                                  |")
+        if "potion" in hero.itens:
+            print("| 4 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 5 - Turn on the Torch      |")
         print("<<----------------------------------------------------->>")
         ans = int(input())
         if ans == 1:
@@ -408,10 +447,9 @@ def going_to_map6(hero):
     while True:
         read_hero_life(hero)
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        print("<<---------------------------------->>")
         Fight("orc", hero)
         print("You are going to the next room")
 
@@ -429,13 +467,16 @@ def going_to_map7(hero):
     while True:
         read_hero_life(hero)
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Keep Walking until find something                 |")
         print("| 2 - Go and take a torch                               |")
+        if "potion" in hero.itens:
+            print("| 3 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 4 - Turn on the Torch      |")
         print("<<----------------------------------------------------->>")
         ans = int(input())
         if ans == 1:
@@ -450,6 +491,8 @@ def going_to_map7(hero):
             ans3 = input()
             if ans3 == "Yes" or ans3 == "yes":
                 print("You Got a Torch")
+                hero.hero_add_itens("Torch")
+
 
 def going_to_map8(hero):
     read_hero_life(hero)
@@ -465,10 +508,13 @@ def going_to_map8(hero):
     while True and swim < 5:
         read_hero_life(hero)
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        if "potion" in hero.itens:
+            print("| 1 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 2 - Turn on the Torch      |")
+        print("<<---------------------------------->>")
         dice = Roll_a_Dice()
         print("DICE WAS ", dice)
         if dice > 5:
@@ -509,13 +555,16 @@ def going_to_map9(hero):
             break
 
         print("")
-        print("<<----------------------------------------------------->>")
-        print("| Personagem com %s pontos de vida   |" %(hero.life))
-        print("| Lista de itens na mochila: %s      |" %(hero.itens))
-        print("<<----------------------------------------------------->>")
+        print("<<---------------------------------->>")
+        hero.print_hero()
+        print("<<---------------------------------->>")
         print("Here is your choices")
         print("| 1 - Try to open 1 door                                |")
         print("| 2 - Try to change some piece position                 |")
+        if "potion" in hero.itens:
+            print("| 3 - Drink Potion      |")
+        if "torch" in hero.itens:
+            print("| 4 - Turn on the Torch      |")
         print("<<----------------------------------------------------->>")
         ans = int(input())
         if ans == 1:
@@ -556,7 +605,8 @@ def going_to_map9(hero):
     print("Are you ready?")
 
 def start():
-    hero = Hero(30,[])
+    itens = ["knife", "torch"]
+    hero = Hero(30,itens)
     print("\n")
     print("You are in your first room.")
     print("Pay atenttion for this rule")
